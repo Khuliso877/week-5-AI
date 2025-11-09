@@ -1,4 +1,4 @@
-#Project Overview
+*Project Overview*
 This project develops an AI system to predict the risk of patient readmission within 30 days of hospital discharge. The goal is to help healthcare providers identify high-risk patients early, reduce readmission rates, and improve patient outcomes.
 ##Features
 • 	Uses diverse data sources including EHRs, demographics, and social determinants of health.
