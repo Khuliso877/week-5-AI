@@ -1,0 +1,122 @@
+Part 1
+Predicting Customer Churn
+Overview
+This report outlines the definition, data, model development, and evaluation/deployment plan
+for a hypothetical AI project focused on predicting customer churn for a subscription-based
+software service (SaaS).
+
+1. Problem Definition
+Hypothetical AI Problem
+Predicting which existing customers are likely to cancel their subscription (churn) within the
+next 30 days.
+
+Objectives
+1. Retention: Accurately identify high-risk customers to enable proactive intervention
+by the sales and customer success teams.
+2. Resource Allocation: Optimize the allocation of customer success resources by
+focusing efforts on the most salvageable customers.
+3. Profitability: Minimize revenue loss associated with customer attrition.
+
+Stakeholders
+1. Customer Success/Sales Team: They will use the predictions to prioritize outreach
+and retention strategies.
+2. Executive Leadership/Finance: They are accountable for overall company growth
+and revenue targets, directly impacted by churn rates.
+
+Key Performance Indicator (KPI)
+Reduction in Customer Churn Rate: The ultimate business measure of success will be a
+quantifiable decrease (e.g., 5% year-over-year) in the actual customer churn rate within the
+segments targeted by the prediction model.
+
+2. Data Collection & Preprocessing
+Data Sources
+1. Product Usage Database: Contains usage patterns, such as login frequency,
+feature adoption rate, number of support tickets filed, and time since last active
+session.
+2. Customer Relationship Management (CRM) System: Contains customer
+demographics, subscription details (plan type, contract length, billing history), and
+historical customer support interaction logs.
+
+Potential Bias
+Historical Intervention Bias: The historical data may be biased because past customer
+success teams have already intervened with some at-risk customers, potentially masking
+their true likelihood of churning. For example, a customer who was truly high-risk might be
+labeled as "retained" only because of an aggressive discount, making the model learn that
+all customers with their profile are low-risk, when they are not.
+
+Preprocessing Steps
+1. Handling Missing Data: Use mean/median imputation for missing numerical
+usage statistics and mode imputation for missing categorical data (e.g., industry
+type).
+2. Feature Engineering: Create new, predictive features, such as "Time Since Last
+Login" (days) and "Rate of Feature Usage Change" (current month vs. previous 3
+months).
+3. Categorical Encoding: Convert categorical variables (e.g., subscription plan,
+industry, region) into a numerical format suitable for modeling, such as One-Hot
+Encoding for nominal variables.
+
+3. Model Development
+Model Choice and Justification
+XGBoost (Extreme Gradient Boosting):
+Justification: XGBoost is an ensemble method based on decision trees, known for its high
+predictive power and ability to handle a mix of numerical and categorical data with complex,
+non-linear relationships. It performs well on imbalanced classification problems (churn is
+typically rare) and provides feature importance scores, which are valuable for the customer
+success team to understand why a customer is flagged as high-risk.
+
+Data Split
+The data would be split chronologically to ensure the model is trained on past data and
+evaluated on future data, mirroring the real-world deployment scenario.
+● Training Set (70%): Data from the earliest time period (e.g., 2 years ago up to 3
+months ago) used to train the model.
+● Validation Set (15%): Data from a more recent period (e.g., the period between 3
+months ago and 1 month ago) used for hyperparameter tuning and early stopping.
+● Test Set (15%): Data from the most recent period (e.g., the last month) used for a
+final, unbiased evaluation of the model's performance before deployment.
+
+Hyperparameters to Tune
+1. n_estimators (Number of Trees): Tuning this prevents overfitting by finding the
+optimal number of sequential models (trees) to add to the ensemble before
+performance on the validation set starts to degrade.
+2. max_depth (Maximum Tree Depth): Tuning this controls the complexity of the
+individual trees. A lower depth simplifies the model and prevents it from learning
+highly specific patterns in the training data (i.e., reduces overfitting).
+
+4. Evaluation & Deployment
+Evaluation Metrics and Relevance
+1.F1-Score: This is the harmonic mean of Precision and Recall. It is critical because
+churn is an imbalanced classification problem (most customers don't churn). The
+F1-Score provides a balanced measure of performance, ensuring the model doesn't
+simply predict "no churn" for all instances (high accuracy, low actual usefulness).
+
+2.Area Under the Receiver Operating Characteristic Curve (AUC-ROC): This
+measures the model's ability to discriminate between the two classes (churn vs. no
+churn). It's relevant because it evaluates performance across all possible
+classification thresholds, allowing the business to choose a threshold that
+balances the cost of false positives (wasting retention resources) versus the cost of
+false negatives (losing a customer).
+
+Concept Drift and Monitoring
+Concept Drift occurs when the statistical properties of the target variable (customer churn
+behavior) change over time in ways that the model did not anticipate during training. For
+example, a new competitor or a change in pricing structure could suddenly change the
+predictors that lead to churn.
+
+Monitoring Post-Deployment
+Concept drift would be monitored by periodically comparing the model's predicted churn
+probability distribution on new data to the distribution observed during the test phase. More
+formally, we would track the model's performance metrics (e.g., F1-Score) on the live,
+incoming data, using a sliding window. If the performance on the live data drops significantly
+(e.g., more than 5% over a month) and consistently, it indicates that the underlying customer
+behavior has changed, necessitating model retraining.
+
+Technical Challenge During Deployment
+Real-Time Latency and Scalability: The system must generate predictions quickly (low
+latency) for a massive, growing number of active customers and serve those predictions to
+the CRM or customer success dashboard in real-time. This requires a scalable,
+high-throughput serving infrastructure (e.g., an API endpoint backed by a containerized
+service like Kubernetes) to handle concurrent requests without system failure or significant
+delay, which would render the "proactive" intervention useless.
+
+
+
