@@ -1,0 +1,17 @@
+Critical Thinking
+
+Ethics & Bias
+Impact of Biased Training Data:
+Biased training data can lead to unfair predictions, disproportionately affecting certain patient groups (e.g., minorities or underrepresented populations), potentially resulting in inadequate care or missed interventions.
+
+Mitigation Strategy:
+Implement bias detection and correction methods such as re-sampling, re-weighting, or using fairness-aware algorithms to ensure equitable model performance across groups.
+
+Trade-offs
+Interpretability vs Accuracy:
+In healthcare, model interpretability is crucial for clinician trust and understanding, but highly interpretable models (e.g., logistic regression) may sacrifice some accuracy compared to complex models (e.g., gradient boosting).
+Balancing this trade-off involves selecting models that provide sufficient accuracy while remaining explainable enough for clinical decision-making.
+
+Impact of Limited Computational Resources:
+Limited resources may necessitate choosing simpler, less computationally intensive models (e.g., logistic regression or decision trees) over complex ones.
+This can affect model accuracy but improves deployment feasibility and real-time prediction capabilities in resource-constrained environments.
